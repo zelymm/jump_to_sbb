@@ -5,6 +5,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 
 @Getter
 @Setter
@@ -18,4 +22,6 @@ public class Question {
     @Column(columnDefinition = "TEXT")
     private String content;
     private LocalDateTime createDate;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    private List<Answer> answerList;
 }
