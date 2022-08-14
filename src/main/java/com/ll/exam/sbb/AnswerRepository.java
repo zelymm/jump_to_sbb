@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface AnswerRepository extends JpaRepository<Answer, Integer>, RepositoryUtil {
     @Transactional
     @Modifying
-    @Query(value = "truncate answer", nativeQuery = true)
+    @Query(value = "ALTER TABLE answer AUTO_INCREMENT = 1", nativeQuery = true)
 
     void truncate();
 }
