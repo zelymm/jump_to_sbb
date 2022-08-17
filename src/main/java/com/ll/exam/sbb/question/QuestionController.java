@@ -6,16 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+@RequestMapping("/question")
 @Controller
 @RequiredArgsConstructor // 생성자 주입
 public class QuestionController {
     private final QuestionService questionService;;
 
-    @RequestMapping("/question/list")
+    @RequestMapping("/list")
     //@ResponseBody가 없으면 question_list를 view로
     public String list(Model model) {
         List<Question> questionList = questionService.getList();
@@ -27,7 +27,7 @@ public class QuestionController {
         return "question_list";
     }
 
-    @RequestMapping("/question/detail/{id}")
+    @RequestMapping("/detail/{id}")
     public String detail(Model model, @PathVariable int id) {
         Question question = questionService.getQuestion(id);
 
