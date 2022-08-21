@@ -43,8 +43,26 @@ public class QuestionController {
     }
 
     @PostMapping("/create")
-    public String questionCreate(String subject, String content) {
-        questionService.create(subject, content);
+    public String questionCreate(Model model, QuestionForm questionForm) {
+        boolean hasError = false;
+
+        if (questionForm.getSubject() == null || questionForm.getSubject().trim().length() == 0) {
+            model.addAttribute("subjectErrorMsg", "제목은 필수항목입니다.");
+            hasError = true;
+        }
+        if (questionForm.getContent() == null || questionForm.getContent().trim().length() == 0) {
+            model.addAttribute("contentErrorMsg", "내용은 필수항목입니다.");
+            hasError = true;
+        }
+
+        if (hasError) {
+            model.addAttribute("questionForm", questionForm);
+            return "question_form";
+        }
+        questionService.create(questionForm.getSubject(), questionForm.getContent());
+
         return "redirect:/question/list";
     }
+
+
 }
