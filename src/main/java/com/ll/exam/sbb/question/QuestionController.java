@@ -1,5 +1,6 @@
 package com.ll.exam.sbb.question;
 
+import com.ll.exam.sbb.answer.AnswerForm;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,7 @@ import java.util.List;
 public class QuestionController {
     private final QuestionService questionService;;
 
-    @RequestMapping("/list")
+    @GetMapping("/list")
     //@ResponseBody가 없으면 question_list를 view로
     public String list(Model model) {
         List<Question> questionList = questionService.getList();
@@ -30,8 +31,8 @@ public class QuestionController {
         return "question_list";
     }
 
-    @RequestMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable int id) {
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable int id, AnswerForm answerForm)  {
         Question question = questionService.getQuestion(id);
 
         model.addAttribute("question", question);
@@ -46,8 +47,8 @@ public class QuestionController {
     @PostMapping("/create")
     public String questionCreate(Model model, @Valid QuestionForm questionForm, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            return "question_form";
+        if (bindingResult.hasErrors()) { //has error?
+            return "question_form"; //<- if yes,
         }
         questionService.create(questionForm.getSubject(), questionForm.getContent());
 
