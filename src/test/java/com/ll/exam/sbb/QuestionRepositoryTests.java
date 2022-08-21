@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -102,6 +105,14 @@ public class QuestionRepositoryTests {
     }
 
     @Test
+    void findAllPageable() {
+        Pageable pageable = PageRequest.of(0, lastSampleDataId);
+        Page<Question> page = questionRepository.findAll(pageable);
+
+        assertThat(page.getTotalPages()).isEqualTo(1);
+    }
+
+    @Test
     void findBySubject() {
         Question q = questionRepository.findBySubject("sbb가 무엇인가요?");
         assertThat(q.getId()).isEqualTo(1);
@@ -124,7 +135,7 @@ public class QuestionRepositoryTests {
 
     @Test
     void createMassSampleData(){
-        boolean run = true; //when large volumes of data are needed
+        boolean run = false; //true-> when large volumes of data are needed
 
         if (run == false) return;
 
