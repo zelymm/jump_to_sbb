@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -23,15 +24,20 @@ public class SecurityConfig {
         http.authorizeRequests().antMatchers("/**").permitAll()
                 .and() //http 객체의 설정을 이어서 할 수 있게 하는 메서드
                 //h2-console/로 시작하는 URL은 CSRF 검증을 하지 않는다는 설정
-                .csrf().ignoringAntMatchers("/h2-console/**")
+                    .csrf().ignoringAntMatchers("/h2-console/**")
+                    .and()
+                    .headers()
+                    .addHeaderWriter(new XFrameOptionsHeaderWriter(
+                            XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
                 .and()
-                .headers()
-                .addHeaderWriter(new XFrameOptionsHeaderWriter(
-                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+                    .formLogin()
+                    .loginPage("/user/login")
+                    .defaultSuccessUrl("/")
                 .and()
-                .formLogin()
-                .loginPage("/user/login")
-                .defaultSuccessUrl("/")
+                    .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                    .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
         ;
         return http.build();
     }
